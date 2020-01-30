@@ -1,4 +1,8 @@
 import React, { useState } from "react";
+import axios from "axios";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.min.css";
+import Layout from "./Layout";
 
 const Feedback = () => {
   const [values, setValues] = useState({
@@ -6,43 +10,61 @@ const Feedback = () => {
     email: "",
     message: "",
     phone: "",
-    uploadFiles: [],
+    uploadedFiles: [],
     buttonText: "Submit",
-    uploadPhotosButtonText: "Upload Files"
+    uploadPhotosButtonText: "Upload files"
   });
 
-  // destrcutures
-
+  // destructure state variables
   const {
     name,
     email,
     message,
     phone,
-    uploadFiles,
+    uploadedFiles,
     buttonText,
     uploadPhotosButtonText
   } = values;
-
-  // destrcutures env
-
+  // destructure env variables
   const {
     REACT_APP_API,
     REACT_APP_CLOUDINARY_CLOUD_NAME,
     REACT_APP_CLOUDINARY_UPLOAD_SECRET
   } = process.env;
 
+  // event handler
   const handleChange = name => event => {
-    setValues({
-      ...values,
-      [name]: event.target.value
-    });
+    setValues({ ...values, [name]: event.target.value });
   };
 
   const handleSubmit = event => {
     event.preventDefault();
-    setValues({ ...values, buttonText: "Your form is sumbitted" });
-    // send data to backend to Email
-    console.table({ name, email, phone, message, uploadFiles });
+    setValues({ ...values, buttonText: "...sending" });
+    // send to backend for email
+    // console.table({ name, email, phone, message, uploadedFiles });
+    axios({
+      method: "POST",
+      url: `${REACT_APP_API}/feedback`,
+      data: { name, email, phone, message, uploadedFiles }
+    })
+      .then(response => {
+        // console.log('feedback submit response', response);
+        if (response.data.success) toast.success("Thanks for your feedback");
+        setValues({
+          ...values,
+          name: "",
+          phone: "",
+          email: "",
+          message: "",
+          uploadedFiles: [],
+          buttonText: "Submitted",
+          uploadPhotosButtonText: "Uploaded"
+        });
+      })
+      .catch(error => {
+        // console.log('feedback submit error', error.response);
+        if (error.response.data.error) toast.error("Failed! Try again!");
+      });
   };
 
   const uploadWidget = () => {
@@ -53,13 +75,13 @@ const Feedback = () => {
         tags: ["ebooks"]
       },
       function(error, result) {
-        //console.log(result);
+        // console.log(result);
         setValues({
           ...values,
-          uploadFiles: result,
+          uploadedFiles: result,
           uploadPhotosButtonText: `${
             result ? result.length : 0
-          } photos uploaded`
+          } Photos uploaded`
         });
       }
     );
@@ -67,7 +89,7 @@ const Feedback = () => {
 
   const feedbackForm = () => (
     <React.Fragment>
-      <div className="form-group pt-5">
+      <div className="form-group">
         <button
           onClick={() => uploadWidget()}
           className="btn btn-outline-secondary btn-block p-5"
@@ -78,18 +100,17 @@ const Feedback = () => {
 
       <form onSubmit={handleSubmit}>
         <div className="form-group">
-          <lable className="text-muted">Description</lable>
+          <label className="text-muted">Description</label>
           <textarea
-            className="form-control"
             onChange={handleChange("message")}
             type="text"
-            classNam="form-control"
+            className="form-control"
             value={message}
             required
           ></textarea>
         </div>
         <div className="form-group">
-          <lable className="text-muted">Your Name</lable>
+          <label className="text-muted">Your Name</label>
           <input
             className="form-control"
             type="text"
@@ -98,9 +119,8 @@ const Feedback = () => {
             required
           />
         </div>
-
         <div className="form-group">
-          <lable className="text-muted">Your Email</lable>
+          <label className="text-muted">Your Email</label>
           <input
             className="form-control"
             type="email"
@@ -109,9 +129,8 @@ const Feedback = () => {
             required
           />
         </div>
-
         <div className="form-group">
-          <lable className="text-muted">Your Phone</lable>
+          <label className="text-muted">Your Phone</label>
           <input
             className="form-control"
             type="number"
@@ -127,6 +146,19 @@ const Feedback = () => {
       </form>
     </React.Fragment>
   );
-  return <div className="p-5">{feedbackForm()}</div>;
+
+  return (
+    <Layout>
+      <ToastContainer />
+      <div className="container text-center">
+        <h1 className="p-5">Feedback Online</h1>
+      </div>
+      <div className="container col-md-8 offset-md-2">{feedbackForm()}</div>
+      <br />
+      <br />
+      <br />
+    </Layout>
+  );
 };
+
 export default Feedback;

@@ -1,11 +1,16 @@
 import React from "react";
 import Feedback from "./components/Feedback";
+import Home from "./Home";
+import About from "./About";
+import { BrowserRouter, Route } from "react-router-dom";
 
 const App = () => {
   return (
-    <div className="p-5">
-      <Feedback />
-    </div>
+    <BrowserRouter>
+      <Route path="/" exact component={Home} />
+      <Route path="/feedback" exact component={Feedback} />
+      <Route path="/about" exact component={About} />
+    </BrowserRouter>
   );
 };
 
