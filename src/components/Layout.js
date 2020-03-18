@@ -6,13 +6,13 @@ const Layout = ({ children }) => (
     <nav>
       <ul className="nav nav-tabs">
         <li className="nav-item p-3">
-          <Link to="/">Home</Link>
+          <Link to="/">หน้าหลัก</Link>
         </li>
         <li className="nav-item p-3">
-          <Link to="/feedback">Feedback</Link>
+          <Link to="/feedback">แจ้งข้อมูล</Link>
         </li>
         <li className="nav-item p-3">
-          <Link to="/about">About</Link>
+          <Link to="/about">เกี่ยวกับเรา</Link>
         </li>
       </ul>
     </nav>

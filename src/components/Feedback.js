@@ -100,7 +100,17 @@ const Feedback = () => {
 
       <form onSubmit={handleSubmit}>
         <div className="form-group">
-          <label className="text-muted">Description</label>
+          <div className="form-group">
+            <label className="text-muted">ชื่อโรงพยาบาล</label>
+            <input
+              className="form-control"
+              type="text"
+              onChange={handleChange("name")}
+              value={name}
+              required
+            />
+          </div>
+          <label className="text-muted">ที่อยู่</label>
           <textarea
             onChange={handleChange("message")}
             type="text"
@@ -109,18 +119,9 @@ const Feedback = () => {
             required
           ></textarea>
         </div>
+
         <div className="form-group">
-          <label className="text-muted">Your Name</label>
-          <input
-            className="form-control"
-            type="text"
-            onChange={handleChange("name")}
-            value={name}
-            required
-          />
-        </div>
-        <div className="form-group">
-          <label className="text-muted">Your Email</label>
+          <label className="text-muted">อีเมล</label>
           <input
             className="form-control"
             type="email"
@@ -130,7 +131,7 @@ const Feedback = () => {
           />
         </div>
         <div className="form-group">
-          <label className="text-muted">Your Phone</label>
+          <label className="text-muted">จำนวนที่ต้องการ</label>
           <input
             className="form-control"
             type="number"
@@ -151,7 +152,7 @@ const Feedback = () => {
     <Layout>
       <ToastContainer />
       <div className="container text-center">
-        <h1 className="p-5">Feedback Online</h1>
+        <h1 className="p-5">แจ้งสถานพยาบาลที่ต้องการหน้ากากอนามัย</h1>
       </div>
       <div className="container col-md-8 offset-md-2">{feedbackForm()}</div>
       <br />
